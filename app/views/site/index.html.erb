@@ -1,7 +1,3 @@
-<script id="visit-template" type="text/template">
-  {{ patient }}
-</script>
-
 <div id="admitapp">
 
 <div class="navbar navbar-fixed-top">
@@ -38,13 +34,26 @@
     </div><!--/span-->
     <div class="span9">
 
-    <ul id="visit-list"></ul>
+      <script id="visit-template" type="text/template">
+        <td>{{ patient }}</td>
+        <td>{{ startsAt }}</td>
+        <td><a class="btn">Admit</a></td>
+      </script>
+
+      <table class="table">
+        <thead>
+          <td>Patient</td>
+          <td>Appt Time</td>
+          </td></td>
+       </thead>
+       <tbody id="visit-list"></tbody>
+     </table>
 
     </div>
   </div><!--/row-->
 
   <footer>
-    <p>&copy; Company 2012</p>
+    <p>&copy; gleeson.org 2012</p>
   </footer>
 
 </div> <!-- /container -->

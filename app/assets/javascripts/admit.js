@@ -26,7 +26,7 @@
     });
 
     window.VisitView = Backbone.View.extend({
-        tagName: 'li',
+        tagName: 'tr',
         template: _.template($('#visit-template').html()),
 
         initialize: function() {
@@ -54,9 +54,9 @@
             // set up bogus data
             //this.visits.fetch();
             this.visits.add([
-                {patient: "Alice", startsAt: 5},
-                {patient: "Bob", startsAt: 1},
-                {patient: "Charlie", startsAt: 3}
+                {patient: "Alice Smith", startsAt: 1030},
+                {patient: "Bob Barker", startsAt: 800},
+                {patient: "Charlie Rose", startsAt: 930}
             ]);
         },
 
