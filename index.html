@@ -25,6 +25,9 @@
                 <li><a>Settings</a></li>
                 <li><a>Logout</a></li>
               </ul>
+              <ul class="nav pull-right">
+                <li>&copy; Gleeson Medical Systems, LLC 2012</li>
+              </ul>
             </div><!--/.nav-collapse -->
           </div>
         </div>
@@ -36,9 +39,9 @@
             <div class="well sidebar-nav">
               <ul class="nav nav-list">
                 <li class="nav-header">Doctors</li>
-                <li><a>Bruce Wayne (<span>+5</span> min)</a></li>
-                <li><a>Clark Kent (<span>0</span> min)</a></li>
-                <li><a>Peter Parker (<span>+23</span> min)</a></li>
+                <li><a>Bill Bixby (<span>+5</span> min)</a></li>
+                <li><a>Patrick Stewart (<span>0</span> min)</a></li>
+                <li><a>Michael Keaton (<span>+23</span> min)</a></li>
               </ul>
             </div><!--/.well -->
           </div><!--/span-->
@@ -53,6 +56,7 @@
             <script id="visit-template" type="text/template">
               <td>{{ patient }}</td>
               <td>{{ startsAt }}</td>
+              <td>{{ doctor }}</td>
               <td><a class="btn">Admit</a></td>
             </script>
 
@@ -60,6 +64,7 @@
               <thead><tr>
                 <th>Patient</th>
                 <th>Appt Time</th>
+                <th>Doc</th>
                 <th></th>
               </tr></thead>
               <tbody id="visit-list"></tbody>
@@ -68,9 +73,6 @@
 
           </div>
         </div><!--/row-->
-        <footer>
-          <p>&copy; Gleeson Medical Systems, LLC 2012</p>
-        </footer>
       </div> <!-- /container -->
     </div> <!-- #admitapp -->
 

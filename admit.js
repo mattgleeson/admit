@@ -19,9 +19,9 @@
     window.VisitList = Backbone.Collection.extend({
         model: Visit,
         url: '/visits/',
-        // TODO startsAt with doc name as tie breaker
-        comparator: function(visit) {
-            return visit.get('startsAt');
+        comparator: function(visit1, visit2) {
+            return (visit1.get('startsAt') - visit2.get('startsAt')) ||
+                (visit1.get('doctor') > visit2.get('doctor') ? 1 : -1);
         }
     });
 
@@ -70,13 +70,7 @@
                 self.visitViews.push(view);
             });
 
-            // set up bogus data
-            //this.visits.fetch();
-            this.visits.add([
-                {patient: "Alice Smith", startsAt: 1030},
-                {patient: "Bob Barker", startsAt: 800},
-                {patient: "Charlie Rose", startsAt: 930}
-            ]);
+            this.loadData();
         },
 
         runSearch: function() {
@@ -90,10 +84,57 @@
             });
         },
 
+        // set up bogus data
+        loadData: function() {
+            var t = 800;
+            while (PATIENT_NAMES.length > 0) {
+                for (var i=0; i<DOCTOR_NAMES.length; i++) {
+                    var doc = DOCTOR_NAMES[i];
+                    var patient = PATIENT_NAMES.shift();
+                    this.visits.add({patient: patient, doctor: doc, startsAt: t});
+                    if (PATIENT_NAMES.length < 1)
+                        return;
+                }
+                t += 100;
+                if (t == 1200)
+                    t += 100; // lunch
+            }           
+        },
+
         render: function() {
             // update sidebar/header            
             return this;
         }
     });
+
+    var DOCTOR_NAMES = [
+        "Bill Bixby",
+        "Patrick Stewart",
+        "Michael Keaton"
+    ];
+    var PATIENT_NAMES = [
+        "Bruce Wayne",
+        "Steve Rogers",
+        "Selena Kyle",
+        "Matt Murdock",
+        "Bruce Banner",
+        "Susan (Storm) Richards",
+        "Anthony Stark",
+        "Peter Parker",
+        "Clark Kent",
+        "Arthur Curry Orin",
+        "Dinah Drake",
+        "Barry Allen",
+        "Oliver Queen",
+        "Hal Jordan",
+        "Frank Castle",
+        "Lt. Cassius Bannister",
+        "Jefferson Pierce",
+        "Sgt. Willie Walker",
+        "Eric Needham",
+        "Charlie Bullock",
+        "Tyson Gilford",
+        "Robert DuBois"
+    ];
     
 }());
