@@ -57,7 +57,7 @@
               <td>{{ patient }}</td>
               <td>{{ startsAt }}</td>
               <td>{{ doctor }}</td>
-              <td><a class="btn">Admit</a></td>
+              <td>{{ arrived ? 'Checked-in' : '<a class="btn">Admit</a>'  }}</td>
             </script>
 
             <table class="table">
