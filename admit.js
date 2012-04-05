@@ -28,6 +28,9 @@
     window.VisitView = Backbone.View.extend({
         tagName: 'tr',
         template: _.template($('#visit-template').html()),
+        events: {
+            "click .btn": "setArrived"
+        },
 
         initialize: function() {
             this.model.bind('change', this.render, this);
@@ -41,6 +44,10 @@
         },
         show: function() {
             $(this.el).show();
+        },
+        setArrived: function() {
+            this.model.set('arrived', true);
+            this.render();
         },
         render: function() {
             $(this.el).html(this.template(this.model.toJSON()));
