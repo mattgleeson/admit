@@ -31,24 +31,43 @@
 
         initialize: function() {
             this.model.bind('change', this.render, this);
+            this.searchString = this.model.get('patient').toLowerCase();
         },
-
+        isSearchMatch: function(q) {
+            return this.searchString.indexOf(q) > -1;
+        },
+        hide: function() {
+            $(this.el).hide();
+        },
+        show: function() {
+            $(this.el).show();
+        },
         render: function() {
             $(this.el).html(this.template(this.model.toJSON()));
             return this;
-        },
+        }
     });
 
 
     window.AdmitApp = Backbone.View.extend({
         visits: new VisitList(),
+        visitViews: [],
+        search: $('#patient-search'),
+
+        events: {
+            "keyup #patient-search": "runSearch",
+            "submit #patient-search": "runSearch",
+            "change #patient-search": "runSearch"
+        },
 
         initialize: function(options) {
+            var self = this;
             this.setElement($('#admitapp'));
 
             this.visits.on('add', function(visit) {
                 var view = new VisitView({model: visit});
                 $("#visit-list").append(view.render().el);
+                self.visitViews.push(view);
             });
 
             // set up bogus data
@@ -60,8 +79,19 @@
             ]);
         },
 
+        runSearch: function() {
+            var q = this.search.val().toLowerCase();
+            _.each(this.visitViews, function(vv) {
+                if (vv.isSearchMatch(q)) {
+                    vv.show();
+                } else {
+                    vv.hide();
+                }
+            });
+        },
+
         render: function() {
-            // update sidebar/header
+            // update sidebar/header            
             return this;
         }
     });
