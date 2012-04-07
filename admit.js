@@ -29,7 +29,7 @@
         tagName: 'tr',
         template: _.template($('#visit-template').html()),
         events: {
-            "click .btn": "setArrived"
+            "click .btn": "launchVerify"
         },
 
         initialize: function() {
@@ -49,8 +49,24 @@
             this.model.set('arrived', true);
             this.render();
         },
+        launchVerify: function() {
+            new VerifyView({model: this.model});
+        },
         render: function() {
             $(this.el).html(this.template(this.model.toJSON()));
+            return this;
+        }
+    });
+
+    window.VerifyView = Backbone.View.extend({
+        template: _.template($('#verify-modal-template').html()),
+        initialize: function(options) {
+            this.setElement($('#verify-modal'));
+            this.render();
+        },
+        render: function() {
+            this.$el.html(this.template(this.model.toJSON()));
+            this.$('.modal').modal({backdrop: true, show: true});
             return this;
         }
     });
