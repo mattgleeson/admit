@@ -45,10 +45,6 @@
         show: function() {
             $(this.el).show();
         },
-        setArrived: function() {
-            this.model.set('arrived', true);
-            this.render();
-        },
         launchVerify: function() {
             new VerifyView({model: this.model});
         },
@@ -60,9 +56,16 @@
 
     window.VerifyView = Backbone.View.extend({
         template: _.template($('#verify-modal-template').html()),
+        events: {
+            "click .btn-primary": "setArrived"
+        },
         initialize: function(options) {
             this.setElement($('#verify-modal'));
             this.render();
+        },
+        setArrived: function() {
+            this.model.set('arrived', true);
+            this.$('.modal').modal('hide');
         },
         render: function() {
             this.$el.html(this.template(this.model.toJSON()));
