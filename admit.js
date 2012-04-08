@@ -35,7 +35,7 @@
         initialize: function(options) {
             this.delay = options.delay;
             this.model.bind('change', this.render, this);
-            this.delay.bind('change', this.render, this);
+            this.delay.bind('change', this.renderDelayChange, this);
             this.searchString = this.model.get('patient').toLowerCase();
         },
         isSearchMatch: function(q) {
@@ -51,6 +51,12 @@
             new VerifyView({model: this.model});
         },
         renderDelayChange: function() {
+            this.render();
+            var exp = this.$('.expected');
+            _.times(3, function() {
+                exp.fadeOut('slow');
+                exp.fadeIn('slow');
+            });
         },
         render: function() {
             var combined = _.extend({}, this.model.toJSON(), this.delay.toJSON());
