@@ -53,10 +53,16 @@
         renderDelayChange: function() {
             this.render();
             var exp = this.$('.expected');
-            _.times(3, function() {
-                exp.fadeOut('slow');
-                exp.fadeIn('slow');
-            });
+            //exp.fadeOut('slow').fadeIn('slow');
+            exp.queue("expected", function(next) {
+                exp.addClass("label label-info");
+                next();
+            })
+                .delay(600, "expected")
+                .queue("expected", function(next) {
+                    exp.removeClass("label label-info");
+                    next();
+                }).dequeue("expected");
         },
         render: function() {
             var combined = _.extend({}, this.model.toJSON(), this.delay.toJSON());
