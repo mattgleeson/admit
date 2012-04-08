@@ -32,8 +32,10 @@
             "click .btn": "launchVerify"
         },
 
-        initialize: function() {
+        initialize: function(options) {
+            this.delay = options.delay;
             this.model.bind('change', this.render, this);
+            this.delay.bind('change', this.render, this);
             this.searchString = this.model.get('patient').toLowerCase();
         },
         isSearchMatch: function(q) {
@@ -48,8 +50,11 @@
         launchVerify: function() {
             new VerifyView({model: this.model});
         },
+        renderDelayChange: function() {
+        },
         render: function() {
-            $(this.el).html(this.template(this.model.toJSON()));
+            var combined = _.extend({}, this.model.toJSON(), this.delay.toJSON());
+            $(this.el).html(this.template(combined));
             return this;
         }
     });
@@ -75,10 +80,58 @@
     });
 
 
+    window.DoctorDelay = Backbone.Model.extend({
+        defaults: function() {
+            return {
+                doctor: '',
+                minsLate: 0,
+            };
+        }
+    });
+
+    window.DoctorDelayList = Backbone.Collection.extend({
+        model: DoctorDelay,
+        comparator: function(d) {
+            return d.get('doctor');
+        }
+    });
+
+    window.DoctorDelayView = Backbone.View.extend({
+        template: _.template($('#doctor-delay-template').html()),
+        tagName: 'li',
+        events: {
+            "mouseenter": "showControls",
+            "mouseleave": "hideControls",
+            "click .icon-minus": "decrement",
+            "click .icon-plus": "increment"
+        },
+        initialize: function() {
+            this.model.bind('change', this.render, this);
+        },
+        showControls: function() {
+            this.$('i').show();
+        },
+        hideControls: function() {
+            this.$('i').hide();
+        },
+        decrement: function() {
+            this.model.set('minsLate', _.max([0, this.model.get('minsLate') - 1]));
+        },
+        increment: function() {
+            this.model.set('minsLate', this.model.get('minsLate') + 1);
+        },
+        render: function() {
+            this.$el.html(this.template(this.model.toJSON()));
+            this.hideControls();
+            return this;
+        }
+    });
+
     window.AdmitApp = Backbone.View.extend({
         visits: new VisitList(),
         visitViews: [],
         search: $('#patient-search'),
+        delays: new DoctorDelayList(),
 
         events: {
             "keyup #patient-search": "runSearch",
@@ -90,8 +143,14 @@
             var self = this;
             this.setElement($('#admitapp'));
 
+            this.delays.on('add', function(delay) {
+                var view = new DoctorDelayView({model: delay});
+                $("#doctor-delay-list").append(view.render().el);
+            });
             this.visits.on('add', function(visit) {
-                var view = new VisitView({model: visit});
+                var delay = self.delays.find(function(d){return d.get('doctor') === visit.get('doctor')});
+                var view = new VisitView({model: visit,
+                                          delay: delay});
                 $("#visit-list").append(view.render().el);
                 self.visitViews.push(view);
             });
@@ -112,6 +171,9 @@
 
         // set up bogus data
         loadData: function() {
+            _.each(DOCTOR_NAMES, function(doc, i) {
+                this.delays.add({doctor: doc, minsLate: 2*i+1});
+            }, this);
             var t = 800;
             while (PATIENT_NAMES.length > 0) {
                 for (var i=0; i<DOCTOR_NAMES.length; i++) {
@@ -124,7 +186,7 @@
                 t += 100;
                 if (t == 1200)
                     t += 100; // lunch
-            }           
+            }
         },
 
         render: function() {

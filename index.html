@@ -61,11 +61,13 @@
         <div class="row-fluid">
           <div class="span3">
             <div class="well sidebar-nav">
-              <ul class="nav nav-list">
+              <ul class="nav nav-list" id="doctor-delay-list">
+
+                <script id="doctor-delay-template" type="text/template">
+                  <a>{{doctor}} ({{minsLate}} min) <i class="icon-minus"></i><i class="icon-plus"></i></a>
+                </script>
+
                 <li class="nav-header">Doctors</li>
-                <li><a>Bill Bixby (<span>+5</span> min)</a></li>
-                <li><a>Patrick Stewart (<span>0</span> min)</a></li>
-                <li><a>Michael Keaton (<span>+23</span> min)</a></li>
               </ul>
             </div><!--/.well -->
           </div><!--/span-->
@@ -80,14 +82,16 @@
             <script id="visit-template" type="text/template">
               <td>{{ patient }}</td>
               <td>{{ startsAt }}</td>
+              <td><span class="expected">{{ startsAt + minsLate }}</span></td>
               <td>{{ doctor }}</td>
-              <td>{{ arrived ? 'Checked-in' : '<a class="btn">Admit</a>'  }}</td>
+              <td>{{ arrived ? 'Checked-in' : '<a class="btn btn-mini">Admit</a>'  }}</td>
             </script>
 
             <table class="table">
               <thead><tr>
                 <th>Patient</th>
                 <th>Appt Time</th>
+                <th>Expected Time</th>
                 <th>Doc</th>
                 <th></th>
               </tr></thead>
